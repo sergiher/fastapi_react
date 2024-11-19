@@ -1,1 +1,1 @@
-# fastapi_react
+# FastAPI and React environtment
