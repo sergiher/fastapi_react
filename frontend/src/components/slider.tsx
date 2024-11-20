@@ -2,16 +2,17 @@ import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 import Slider from "@mui/material/Slider";
 import MuiInput from "@mui/material/Input";
+import VolumeUp from "@mui/icons-material/VolumeUp";
 
 const Input = styled(MuiInput)`
   width: 42px;
 `;
 
-const maxExplainTime: number = parseInt(
-  process.env.NEXT_PUBLIC_MAX_EXPLAIN_TIME as string
-);
+const maxExplainTime0: number = 11;
+const maxExplainTime: number = 11;
 
 type SliderData = {
   timeToExplain: number;
@@ -33,16 +34,21 @@ export default function InputSlider({
   };
 
   const handleBlur = () => {
-    if (timeToExplain < 1) {
-      setTimeToExplain(1);
+    if (timeToExplain < 0) {
+      setTimeToExplain(0);
     } else if (timeToExplain > maxExplainTime) {
       setTimeToExplain(maxExplainTime);
     }
   };
 
   return (
-    <Box sx={{ width: 306 }}>
-      <Grid container spacing={4}>
+    <Box sx={{ width: 250 }}>
+      {maxExplainTime0}
+      {maxExplainTime}
+      <Grid container spacing={2} sx={{ alignItems: "center" }}>
+        <Grid item>
+          <VolumeUp />
+        </Grid>
         <Grid item xs>
           <Slider
             value={typeof timeToExplain === "number" ? timeToExplain : 0}
@@ -52,7 +58,7 @@ export default function InputSlider({
             max={maxExplainTime}
           />
         </Grid>
-        <Grid item style={{ display: "inline-flex" }}>
+        <Grid item>
           <Input
             value={timeToExplain}
             name="timeToExplain"
@@ -60,17 +66,17 @@ export default function InputSlider({
             onChange={handleInputChange}
             onBlur={handleBlur}
             inputProps={{
-              step: 1,
-              min: 1,
-              max: maxExplainTime,
+              step: 10,
+              min: 0,
+              max: 100,
               type: "number",
               "aria-labelledby": "input-slider",
             }}
           />{" "}
-          <span>
+          <Typography>
             minute
             <span style={timeToExplain === 1 ? { color: "white" } : {}}>s</span>
-          </span>
+          </Typography>
         </Grid>
       </Grid>
     </Box>
