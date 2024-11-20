@@ -11,8 +11,7 @@ const Input = styled(MuiInput)`
   width: 42px;
 `;
 
-const maxExplainTime0: number = 11;
-const maxExplainTime: number = 11;
+const maxExplainTime: number = 10;
 
 type SliderData = {
   timeToExplain: number;
@@ -43,8 +42,6 @@ export default function InputSlider({
 
   return (
     <Box sx={{ width: 250 }}>
-      {maxExplainTime0}
-      {maxExplainTime}
       <Grid container spacing={2} sx={{ alignItems: "center" }}>
         <Grid item>
           <VolumeUp />
