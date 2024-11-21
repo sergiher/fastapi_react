@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 function SingleFileUploader() {
   const { register, handleSubmit } = useForm();
   const [response, setResponse] = useState("");
-  const [originalImgFileName, setOriginalImgFileName] = useState("");
-  const [thumbImgFileName, setThumbImgFileName] = useState("");
 
   const onSubmit = async (data: any) => {
     const formData = new FormData();
@@ -16,8 +14,6 @@ function SingleFileUploader() {
         body: formData,
       }).then((res) => res.json());
       setResponse(res.message);
-      setOriginalImgFileName(res.originalImageFileName);
-      setThumbImgFileName(res.thumbImageFileName);
     } catch (error) {
       console.error(error);
     }
@@ -33,12 +29,22 @@ function SingleFileUploader() {
         </form>
       </div>
       response: {response}
+      {/* The name of the images has to be always the same. This way, when the react
+      reloads because there are new images in the "images" folder, it finds always the
+      images because always have the same name.
+      
+      I cannot change the webpack config, to avoid reload of the website if public/images
+      change, because it's inside node_modules and that directory can change with every
+      new installation.
+      
+      I cannot store the images outside the react app directory because then it's
+      too difficult to find them.
+      */}
       <div>
-        original image: {originalImgFileName}{" "}
-        <img width={60} src={`images/${originalImgFileName}`} />
+        original image: <img width={60} src="images/image_original.jpg" />
       </div>
       <div>
-        thumb image: <img width={60} src={`/images/${thumbImgFileName}`} />
+        thumb image: <img width={60} src="images/image_thumb.jpg" />
       </div>
     </>
   );
