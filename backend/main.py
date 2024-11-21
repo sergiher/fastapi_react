@@ -22,15 +22,6 @@ async def upload(file: UploadFile):
         original_file_path = f"/home/sergio/Documents/tech/fastapi_react/frontend/public/images/image_original.{extension}"
         thumb_file_path = f"/home/sergio/Documents/tech/fastapi_react/frontend/public/images/image_thumb.{extension}"
 
-        # print()
-        # with open(original_file_path, "wb") as f:
-        #     f.write(file.file.read())
-        #     return {
-        #         "message": "File saved successfully",
-        #         "originalImageFileName": f"image_original.{extension}",
-        #         "thumbImageFileName": f"image_original.{extension}",
-        #     }
-
         with open(original_file_path, "wb") as originalF:
             originalF.write(file.file.read())
 
