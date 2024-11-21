@@ -1,30 +1,47 @@
-from fastapi import FastAPI, Request
-from gemini_class import myGeminiAI
-
-model_name = "gemini-1.5-flash"
-my_ai = myGeminiAI(model_name=model_name)
+from fastapi import FastAPI, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from PIL import Image
 
 app = FastAPI()
 
+origins = ["*"]
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-# @app.route("/api/explain", methods=["POST"])
-@app.route("/api/explain")
-def initApi():
-    __import__("pdb").set_trace()
-    subject = Request.json.get("subjectToLearnAbout")
-    timeToExplain = Request.json.get("timeToExplain")
-    reformulatedQuestion = (
-        "please, explain me about "
-        + subject
-        + " as if you were speaking for "
-        + str(timeToExplain)
-        + " minutes"
-    )
-    response = my_ai.generate_response(input_text=reformulatedQuestion)
-    dataToJson = {"responseText": response.text}
-    return dataToJson
+@app.post("/api/upload")
+async def upload(file: UploadFile):
+    try:
+        extension = str(file.filename).split(".")[-1]
+        original_file_path = f"/home/sergio/Documents/tech/fastapi_react/frontend/public/images/image_original.{extension}"
+        thumb_file_path = f"/home/sergio/Documents/tech/fastapi_react/frontend/public/images/image_thumb.{extension}"
+
+        # print()
+        # with open(original_file_path, "wb") as f:
+        #     f.write(file.file.read())
+        #     return {
+        #         "message": "File saved successfully",
+        #         "originalImageFileName": f"image_original.{extension}",
+        #         "thumbImageFileName": f"image_original.{extension}",
+        #     }
+
+        with open(original_file_path, "wb") as originalF:
+            originalF.write(file.file.read())
+
+            im = Image.open(file.file)
+            (width, height) = (im.width // 2, im.height // 2)
+            im_resized = im.resize((width, height))
+            im_resized.save(thumb_file_path)
+            return {
+                "message": "File saved successfully",
+                "originalImageFileName": f"image_original.{extension}",
+                "thumbImageFileName": f"image_original.{extension}",
+            }
+    except Exception as e:
+        return {"message": e.args}
